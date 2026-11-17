@@ -1,7 +1,6 @@
 
-
 # ==========================================
-# 1. IMPORTAÇÃO DAS BIBLIOTECAS
+# 1. IMPORTAÇÕES
 # ==========================================
 
 import pandas as pd
@@ -15,17 +14,27 @@ from sklearn.metrics import (
     classification_report
 )
 
+from transformers import pipeline
+
 
 # ==========================================
-# 2. CARREGAMENTO DOS DADOS
+# 2. CONFIGURAÇÕES
+# ==========================================
+
+ROTULOS = ["negativo", "neutro", "positivo"]
+
+TRADUCAO_SENTIMENTOS = {
+    "positive": "positivo",
+    "negative": "negativo",
+    "neutral": "neutro"
+}
+
+
+# ==========================================
+# 3. CARREGAMENTO E ANÁLISE DOS DADOS
 # ==========================================
 
 dados = pd.read_csv("data/sentimentos.csv")
-
-
-# ==========================================
-# 3. ANÁLISE EXPLORATÓRIA DOS DADOS
-# ==========================================
 
 print("Primeiras avaliações:")
 print(dados.head())
@@ -41,16 +50,11 @@ print(dados["sentimento"].value_counts())
 
 
 # ==========================================
-# 4. SEPARAÇÃO DAS VARIÁVEIS
+# 4. PREPARAÇÃO DOS DADOS
 # ==========================================
 
 X = dados["texto"]
 y = dados["sentimento"]
-
-
-# ==========================================
-# 5. DIVISÃO DOS DADOS EM TREINAMENTO E TESTE
-# ==========================================
 
 X_treino_texto, X_teste_texto, y_treino, y_teste = train_test_split(
     X,
@@ -60,11 +64,7 @@ X_treino_texto, X_teste_texto, y_treino, y_teste = train_test_split(
     stratify=y
 )
 
-# ==========================================
-# INVESTIGAÇÃO DOS EXEMPLOS NEGATIVOS
-# ==========================================
-
-print("\nAvaliações negativas utilizadas no treinamento:")
+print("\nQuantidade de avaliações negativas no treinamento:")
 
 for texto, sentimento in zip(X_treino_texto, y_treino):
     if sentimento == "negativo":
@@ -72,45 +72,33 @@ for texto, sentimento in zip(X_treino_texto, y_treino):
 
 
 # ==========================================
-# 6. VETORIZAÇÃO DOS TEXTOS COM TF-IDF
+# 5. VETORIZAÇÃO COM TF-IDF
 # ==========================================
 
-vetorizador = TfidfVectorizer()
+vetorizador = TfidfVectorizer(
+    ngram_range=(1, 2),
+    max_features=200
+)
 
-# Aprende o vocabulário e transforma os textos de treinamento
 X_treino = vetorizador.fit_transform(X_treino_texto)
-
-# Transforma os textos de teste usando o vocabulário aprendido
 X_teste = vetorizador.transform(X_teste_texto)
 
-
-# ==========================================
-# 7. CONFERÊNCIA DA DIVISÃO DOS DADOS
-# ==========================================
+print("\nQuantidade de características:")
+print(len(vetorizador.get_feature_names_out()))
 
 print("\nDimensão dos dados de treinamento:", X_treino.shape)
 print("Dimensão dos dados de teste:", X_teste.shape)
 
 
 # ==========================================
-# 8. CRIAÇÃO DO MODELO
+# 6. TREINAMENTO DO LOGISTIC REGRESSION
 # ==========================================
 
 modelo = LogisticRegression()
 
-
-# ==========================================
-# 9. TREINAMENTO DO MODELO
-# ==========================================
-
 modelo.fit(X_treino, y_treino)
 
 print("\nModelo treinado com sucesso!")
-
-
-# ==========================================
-# 10. REALIZAÇÃO DAS PREVISÕES
-# ==========================================
 
 previsoes = modelo.predict(X_teste)
 
@@ -131,69 +119,153 @@ for texto, real, previsto in zip(
 
 
 # ==========================================
-# 11. AVALIAÇÃO DA ACURÁCIA
+# 7. AVALIAÇÃO DO LOGISTIC REGRESSION
 # ==========================================
 
 acuracia = accuracy_score(y_teste, previsoes)
 
-print("\nAcurácia:", acuracia)
-print("Acurácia em porcentagem:", acuracia * 100, "%")
+print("\n===== RESULTADO DO LOGISTIC REGRESSION =====")
 
-
-# ==========================================
-# 12. MATRIZ DE CONFUSÃO
-# ==========================================
-
-matriz = confusion_matrix(
-    y_teste,
-    previsoes,
-    labels=["negativo", "neutro", "positivo"]
-)
+print("Acurácia:", round(acuracia * 100, 2), "%")
 
 print("\nMatriz de confusão:")
-print(matriz)
-
-
-# ==========================================
-# 13. RELATÓRIO DE CLASSIFICAÇÃO
-# ==========================================
+print(confusion_matrix(
+    y_teste,
+    previsoes,
+    labels=ROTULOS
+))
 
 print("\nRelatório de classificação:")
+print(classification_report(
+    y_teste,
+    previsoes,
+    labels=ROTULOS,
+    zero_division=0
+))
+
+
+# ==========================================
+# 8. CARREGAMENTO DO HUGGING FACE
+# ==========================================
+
+print("\nCarregando modelo pré-treinado do Hugging Face...")
+
+classificador_hf = pipeline(
+    "text-classification",
+    model="Horizon-Labs/multilingual-sentiment-small"
+)
+
+print("Modelo do Hugging Face carregado com sucesso!")
+
+
+# ==========================================
+# 9. PREVISÕES DO HUGGING FACE
+# ==========================================
+
+previsoes_hf = []
+
+for texto in X_teste_texto:
+
+    resultado = classificador_hf(texto)
+
+    sentimento_ingles = resultado[0]["label"].lower()
+
+    sentimento_portugues = TRADUCAO_SENTIMENTOS.get(
+        sentimento_ingles,
+        sentimento_ingles
+    )
+
+    previsoes_hf.append(sentimento_portugues)
+
+
+# ==========================================
+# 10. AVALIAÇÃO DO HUGGING FACE
+# ==========================================
+
+acuracia_hf = accuracy_score(y_teste, previsoes_hf)
+
+print("\n===== RESULTADO DO HUGGING FACE =====")
+
+print("Acurácia:", round(acuracia_hf * 100, 2), "%")
+
+print("\nMatriz de confusão:")
+print(confusion_matrix(
+    y_teste,
+    previsoes_hf,
+    labels=ROTULOS
+))
+
+print("\nRelatório de classificação:")
+print(classification_report(
+    y_teste,
+    previsoes_hf,
+    labels=ROTULOS,
+    zero_division=0
+))
+
+
+# ==========================================
+# 11. COMPARAÇÃO DOS MODELOS
+# ==========================================
+
+print("\n===== COMPARAÇÃO DOS MODELOS =====")
 
 print(
-    classification_report(
-        y_teste,
-        previsoes,
-        zero_division=0
-    )
+    "Logistic Regression:",
+    round(acuracia * 100, 2),
+    "%"
+)
+
+print(
+    "Hugging Face:",
+    round(acuracia_hf * 100, 2),
+    "%"
 )
 
 
 # ==========================================
-# 14. CLASSIFICADOR INTERATIVO
+# 12. CLASSIFICAÇÃO INTERATIVA
 # ==========================================
+
+print("\n===== CLASSIFICADOR DE SENTIMENTOS =====")
 
 while True:
 
-    texto_novo = input("\nDigite uma avaliação (ou 'sair' para encerrar): ")
+    texto_novo = input(
+        "\nDigite uma avaliação (ou 'sair' para encerrar): "
+    )
 
-    # Verificar se o usuário deseja encerrar
     if texto_novo.strip().lower() == "sair":
         print("Programa encerrado!")
         break
 
-    # Verificar se o texto está vazio
-    if texto_novo.strip() == "":
+    if not texto_novo.strip():
         print("Digite uma avaliação válida!")
         continue
 
-    # Transformar o texto usando o TF-IDF já treinado
-    texto_novo_vetorizado = vetorizador.transform([texto_novo])
+    # Logistic Regression
+    texto_vetorizado = vetorizador.transform([texto_novo])
+    previsao_lr = modelo.predict(texto_vetorizado)
 
-    # Prever o sentimento da avaliação
-    previsao_nova = modelo.predict(texto_novo_vetorizado)
+    # Hugging Face
+    resultado_hf = classificador_hf(texto_novo)
 
-    # Exibir o resultado
-    print("Sentimento identificado:", previsao_nova[0])
+    sentimento_ingles = resultado_hf[0]["label"].lower()
 
+    sentimento_portugues = TRADUCAO_SENTIMENTOS.get(
+        sentimento_ingles,
+        sentimento_ingles
+    )
 
+    confianca = resultado_hf[0]["score"]
+
+    print("\n===== RESULTADOS DA CLASSIFICAÇÃO =====")
+
+    print("Logistic Regression:", previsao_lr[0])
+    print("Hugging Face:", sentimento_portugues)
+
+    print(
+        "Confiança do Hugging Face:",
+        round(confianca * 100, 2),
+        "%"
+    )
