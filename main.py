@@ -60,6 +60,16 @@ X_treino_texto, X_teste_texto, y_treino, y_teste = train_test_split(
     stratify=y
 )
 
+# ==========================================
+# INVESTIGAÇÃO DOS EXEMPLOS NEGATIVOS
+# ==========================================
+
+print("\nAvaliações negativas utilizadas no treinamento:")
+
+for texto, sentimento in zip(X_treino_texto, y_treino):
+    if sentimento == "negativo":
+        print("-", texto)
+
 
 # ==========================================
 # 6. VETORIZAÇÃO DOS TEXTOS COM TF-IDF
@@ -106,6 +116,18 @@ previsoes = modelo.predict(X_teste)
 
 print("\nPrevisões:", list(previsoes))
 print("Sentimentos reais:", list(y_teste))
+
+print("\nAvaliações classificadas incorretamente:")
+
+for texto, real, previsto in zip(
+    X_teste_texto,
+    y_teste,
+    previsoes
+):
+    if real != previsto:
+        print("\nTexto:", texto)
+        print("Sentimento real:", real)
+        print("Sentimento previsto:", previsto)
 
 
 # ==========================================
