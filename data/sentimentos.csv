@@ -1,0 +1,91 @@
+texto,sentimento
+"Adorei o produto, chegou rápido e tem ótima qualidade.",positivo
+"Estou muito satisfeita com a compra.",positivo
+"O atendimento foi excelente.",positivo
+"Gostei bastante da experiência.",positivo
+"Produto maravilhoso, recomendo muito.",positivo
+"O produto é péssimo e veio quebrado.",negativo
+"Não gostei da compra.",negativo
+"O atendimento foi horrível.",negativo
+"Estou decepcionada com a qualidade.",negativo
+"Não recomendo esse produto.",negativo
+"O produto chegou ontem.",neutro
+"A embalagem é de cor azul.",neutro
+"Recebi três unidades do produto.",neutro
+"O pedido foi realizado na segunda-feira.",neutro
+"O produto possui garantia de um ano.",neutro
+"O atendimento foi muito atencioso e rápido.",positivo
+"Adorei a experiência de compra.",positivo
+"O produto chegou em perfeito estado.",positivo
+"Estou muito feliz com minha aquisição.",positivo
+"Excelente qualidade e ótimo custo-benefício.",positivo
+"A entrega atrasou e ninguém explicou o motivo.",negativo
+"Não gostei da qualidade do produto.",negativo
+"Minha experiência foi péssima.",negativo
+"O produto apresentou defeito no primeiro uso.",negativo
+"Fiquei muito insatisfeita com a compra.",negativo
+"O produto chegou dentro da embalagem original.",neutro
+"A compra foi realizada pelo aplicativo.",neutro
+"O pedido contém dois produtos.",neutro
+"A entrega aconteceu na quarta-feira.",neutro
+"O produto está disponível na cor preta.",neutro
+O atendimento foi excelente e resolveu meu problema rapidamente,positivo
+Adorei a experiência de compra e recomendo a loja,positivo
+O produto superou minhas expectativas,positivo
+A qualidade é muito boa e o preço foi justo,positivo
+Fiquei satisfeita com a minha compra,positivo
+A entrega chegou antes do prazo e tudo estava perfeito,positivo
+O aplicativo é fácil de usar e funciona muito bem,positivo
+O suporte foi atencioso e prestativo,positivo
+Estou muito feliz com o resultado,positivo
+A embalagem veio em perfeito estado,positivo
+O produto funciona perfeitamente e valeu a pena,positivo
+A equipe foi educada durante todo o atendimento,positivo
+Minha experiência foi ótima do início ao fim,positivo
+Gostei da facilidade para realizar o pedido,positivo
+A compra foi simples e a entrega foi rápida,positivo
+O serviço apresentou uma qualidade excelente,positivo
+Recebi exatamente o que estava esperando,positivo
+O atendimento foi rápido e muito eficiente,positivo
+A experiência foi melhor do que eu imaginava,positivo
+Certamente comprarei novamente,positivo
+O produto chegou quebrado e não consigo utilizá-lo,negativo
+Fiquei decepcionada com a qualidade,negativo
+A entrega atrasou muito e ninguém explicou o motivo,negativo
+O atendimento foi grosseiro e pouco prestativo,negativo
+Não recomendo esse produto,negativo
+O aplicativo trava constantemente,negativo
+Minha compra veio incompleta,negativo
+O produto não funciona como deveria,negativo
+Tive muitos problemas para realizar o pagamento,negativo
+A experiência foi frustrante,negativo
+O suporte não resolveu meu problema,negativo
+A embalagem estava danificada quando recebi,negativo
+O preço é muito alto para essa qualidade,negativo
+Estou insatisfeita com o serviço,negativo
+O pedido foi cancelado sem explicação,negativo
+A qualidade do material é péssima,negativo
+Esperei muito tempo e não fui atendida,negativo
+O produto apresentou defeito no primeiro dia,negativo
+Não gostei da experiência de compra,negativo
+A entrega foi feita no endereço errado,negativo
+O produto possui três opções de tamanho,neutro
+A loja funciona de segunda a sábado,neutro
+O pedido foi realizado pela internet,neutro
+A embalagem contém duas unidades,neutro
+O atendimento aconteceu no período da tarde,neutro
+O produto está disponível na cor azul,neutro
+A compra foi registrada no sistema,neutro
+O prazo de entrega informado é de cinco dias,neutro
+O aplicativo apresenta uma tela inicial com opções de compra,neutro
+A loja possui atendimento presencial e online,neutro
+O produto está disponível em diferentes modelos,neutro
+O pagamento foi realizado por cartão,neutro
+A entrega foi agendada para sexta-feira,neutro
+O pedido contém um produto e dois acessórios,neutro
+A loja está localizada no centro da cidade,neutro
+O aplicativo permite consultar o histórico de pedidos,neutro
+O produto possui garantia de doze meses,neutro
+A compra foi realizada durante a manhã,neutro
+O pedido recebeu um código de identificação,neutro
+O catálogo apresenta vinte produtos diferentes,neutro
